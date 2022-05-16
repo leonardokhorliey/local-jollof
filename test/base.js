@@ -644,7 +644,7 @@ const setupTest = (module.exports.setupTest = async (
   );
   await vesting02.setMPHMinter(mphMinter.address);
   await mph.transferOwnership(mphMinter.address);
-  await mphMinter.grantRole(WHITELISTER_ROLE, acc0, { from: acc0 });
+  await mphMinter.grantRole(WHITELISTER_ROLE, acc0, { from: govTreasury });
 
   // Initialize MPHConverter
   foreignMPH = await ERC20Mock.new();
@@ -655,7 +655,9 @@ const setupTest = (module.exports.setupTest = async (
     foreignMPH.address,
     dailyConvertLimit
   );
-  await mphMinter.grantRole(CONVERTER_ROLE, converter.address, { from: acc0 });
+  await mphMinter.grantRole(CONVERTER_ROLE, converter.address, {
+    from: govTreasury
+  });
   await mph.approve(converter.address, INF, { from: acc0 });
   await mph.approve(converter.address, INF, { from: acc1 });
   await mph.approve(converter.address, INF, { from: acc2 });
@@ -765,11 +767,13 @@ const setupTest = (module.exports.setupTest = async (
     });
     await mphMinter.setPoolDepositorRewardMintMultiplier(
       dInterestPool.address,
-      PoolDepositorRewardMintMultiplier
+      PoolDepositorRewardMintMultiplier,
+      { from: govTreasury }
     );
     await mphMinter.setPoolFunderRewardMultiplier(
       dInterestPool.address,
-      PoolFunderRewardMultiplier
+      PoolFunderRewardMultiplier,
+      { from: govTreasury }
     );
 
     // Transfer the ownership of the money market to the DInterest pool
