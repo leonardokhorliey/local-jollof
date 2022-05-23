@@ -279,6 +279,66 @@ const aaveMoneyMarketModule = () => {
   };
 };
 
+const moolaMoneyMarketModule = () => {
+  // Contract artifacts
+  const MoolaMarket = artifacts.require("MoolaMarket");
+  const ATokenMock = artifacts.require("ATokenMock");
+  const LendingPoolMock = artifacts.require("LendingPoolMock");
+  const LendingPoolAddressesProviderMock = artifacts.require(
+    "LendingPoolAddressesProviderMock"
+  );
+  const ERC20Mock = artifacts.require("ERC20Mock");
+
+  let aToken;
+  let lendingPool;
+  let lendingPoolAddressesProvider;
+  let moola;
+  const aTokenAddresssList = [];
+
+  const deployMoneyMarket = async (accounts, factory, stablecoin, rewards) => {
+    // Initialize mock Aave contracts
+    aToken = await ATokenMock.new(stablecoin.address);
+    if (!aTokenAddresssList.includes(aToken.address)) {
+      aTokenAddresssList.push(aToken.address);
+    }
+    lendingPool = await LendingPoolMock.new();
+    await lendingPool.setReserveAToken(stablecoin.address, aToken.address);
+    lendingPoolAddressesProvider = await LendingPoolAddressesProviderMock.new();
+    await lendingPoolAddressesProvider.setLendingPoolImpl(lendingPool.address);
+    moola = await ERC20Mock.new();
+
+    // Mint stablecoins
+    const mintAmount = 1000 * STABLECOIN_PRECISION;
+    await stablecoin.mint(lendingPool.address, num2str(mintAmount));
+
+    // Initialize the money market
+    const marketTemplate = await MoolaMarket.new();
+    const marketReceipt = await factory.createMoolaMarket(
+      marketTemplate.address,
+      DEFAULT_SALT,
+      lendingPoolAddressesProvider.address,
+      aToken.address,
+      rewards,
+      accounts[0],
+      stablecoin.address
+    );
+    return await factoryReceiptToContract(marketReceipt, MoolaMarket);
+  };
+
+  const timePass = async timeInYears => {
+    await timeTravel(timeInYears * YEAR_IN_SEC);
+    for (const aTokenAddress of aTokenAddresssList) {
+      const aToken = await ATokenMock.at(aTokenAddress);
+      await aToken.mintInterest(num2str(timeInYears * YEAR_IN_SEC));
+    }
+  };
+
+  return {
+    deployMoneyMarket,
+    timePass
+  };
+};
+
 const bProtocolMoneyMarketModule = () => {
   // Contract artifacts
   const BProtocolMarket = artifacts.require("BProtocolMarket");
@@ -569,25 +629,29 @@ const moneyMarketModuleList = (module.exports.moneyMarketModuleList = [
     moduleGenerator: aaveMoneyMarketModule
   },
   {
-    name: "B.Protocol",
-    moduleGenerator: bProtocolMoneyMarketModule
+    name: "Moola",
+    moduleGenerator: moolaMoneyMarketModule
   },
-  {
-    name: "CompoundERC20",
-    moduleGenerator: compoundERC20MoneyMarketModule
-  },
-  {
-    name: "CreamERC20",
-    moduleGenerator: creamERC20MoneyMarketModule
-  },
-  {
-    name: "Harvest",
-    moduleGenerator: harvestMoneyMarketModule
-  },
-  {
-    name: "YVault",
-    moduleGenerator: yvaultMoneyMarketModule
-  }
+  // {
+  //   name: "B.Protocol",
+  //   moduleGenerator: bProtocolMoneyMarketModule
+  // },
+  // {
+  //   name: "CompoundERC20",
+  //   moduleGenerator: compoundERC20MoneyMarketModule
+  // },
+  // {
+  //   name: "CreamERC20",
+  //   moduleGenerator: creamERC20MoneyMarketModule
+  // },
+  // {
+  //   name: "Harvest",
+  //   moduleGenerator: harvestMoneyMarketModule
+  // },
+  // {
+  //   name: "YVault",
+  //   moduleGenerator: yvaultMoneyMarketModule
+  // }
 ]);
 
 const setupTest = (module.exports.setupTest = async (
