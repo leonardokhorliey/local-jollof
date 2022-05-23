@@ -12,11 +12,11 @@ import {
     ILendingPoolAddressesProvider
 } from "./imports/ILendingPoolAddressesProvider.sol";
 
-contract AaveMarket is MoneyMarket {
+contract MoolaMarket is MoneyMarket {
     using SafeERC20 for ERC20;
     using AddressUpgradeable for address;
 
-    uint16 internal constant REFERRALCODE = 20; // Aave referral program code
+    uint16 internal constant REFERRALCODE = 0; // Moola referral program code
 
     ILendingPoolAddressesProvider public provider; // Used for fetching the current address of LendingPool
     ERC20 public override stablecoin;
