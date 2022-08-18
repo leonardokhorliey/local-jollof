@@ -9,6 +9,7 @@ import {ZeroCouponBond} from "./zero-coupon-bond/ZeroCouponBond.sol";
 import {EMAOracle} from "./models/interest-oracle/EMAOracle.sol";
 import {AaveMarket} from "./moneymarkets/aave/AaveMarket.sol";
 import {MoolaMarket} from "./moneymarkets/moola/MoolaMarket.sol";
+import {MobiusMarket} from "./moneymarkets/mobius/MobiusMarket.sol";
 import {BProtocolMarket} from "./moneymarkets/bprotocol/BProtocolMarket.sol";
 import {
     CompoundERC20Market
@@ -166,16 +167,28 @@ contract Factory {
         MoolaMarket clone = MoolaMarket(template.cloneDeterministic(salt));
 
         // initialize
-        clone.initialize(
-            _provider,
-            _aToken,
-            _rewards,
-            _rescuer,
-            _stablecoin
-        );
+        clone.initialize(_provider, _aToken, _rewards, _rescuer, _stablecoin);
         clone.transferOwnership(msg.sender);
 
         emit CreateClone("MoolaMarket", template, salt, address(clone));
+        return clone;
+    }
+
+    function createMobiusMarket(
+        address template,
+        bytes32 salt,
+        address _swap,
+        address _rescuer,
+        address _stablecoin,
+        uint256 _swapLength
+    ) external returns (MobiusMarket) {
+        MobiusMarket clone = MobiusMarket(template.cloneDeterministic(salt));
+
+        // initialize
+        clone.initialize(_swap, _rescuer, _stablecoin, _swapLength);
+        clone.transferOwnership(msg.sender);
+
+        emit CreateClone("MobiusMarket", template, salt, address(clone));
         return clone;
     }
 
