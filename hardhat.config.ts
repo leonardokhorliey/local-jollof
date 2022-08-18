@@ -59,7 +59,8 @@ const config: HardhatUserConfig = {
     hardhat: {
       /*forking: {
         url:
-          "https://eth-mainnet.alchemyapi.io/v2/pvGDp1uf8J7QZ7MXpLhYs_SnMnsE0TY5"
+          "https://eth-mainnet.g.alchemy.com/v2/<YOUR_API_KEY>",
+        blockNumber: 15000000 
       },*/
       /*forking: {
         url:
@@ -70,6 +71,9 @@ const config: HardhatUserConfig = {
           "https://polygon-rpc.com"
       },*/
       allowUnlimitedContractSize: true
+    },
+    localhost: {
+      url: "http://127.0.0.1:8545",
     },
     rinkeby: {
       url:
