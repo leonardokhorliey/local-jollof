@@ -339,6 +339,101 @@ const moolaMoneyMarketModule = () => {
   };
 };
 
+const mobiusMoneyMarketModule = () => {
+  // Contract artifacts
+  const MathUtils = artifacts.require("MathUtils");
+  const SwapUtils = artifacts.require("SwapUtils");
+  const Swap = artifacts.require("Swap");
+  const MobiusMarket = artifacts.require("MobiusMarket");
+  const ERC20Mock = artifacts.require("ERC20Mock");
+
+  let token2;
+  let mathUtils;
+  let swapUtils;
+  let mobius;
+
+  const deployMoneyMarket = async (accounts, factory, stablecoin, rewards) => {
+    token2 = await ERC20Mock.new();
+
+    try {
+      mathUtils = await MathUtils.new();
+      await SwapUtils.link(mathUtils);
+      swapUtils = await SwapUtils.new();
+      await Swap.link(swapUtils);
+    } catch (error) {}
+
+    // // Deploy Mobius contracts
+    // mathUtils = await MathUtils.new();
+    // await SwapUtils.link(mathUtils);
+    // swapUtils = await SwapUtils.new();
+    // await Swap.link(swapUtils);
+    mobius = await Swap.new(
+      [stablecoin.address, token2.address],
+      [6, 6],
+      "Mobius Test LP",
+      "MobLP",
+      200,
+      10 ** 7, // .1% swap fee
+      10 ** 9, // 10% admin fee
+      0,
+      0,
+      accounts[0]
+    );
+
+    // Add initial liquidity to swap
+    let unit = ethers.utils.parseEther("20.0");
+    await stablecoin.mint(accounts[0], unit);
+    await token2.mint(accounts[0], unit);
+    await stablecoin.approve(mobius.address, unit);
+    await token2.approve(mobius.address, unit);
+    await mobius.addLiquidity(
+      [unit, unit],
+      "0",
+      "1000000000000000000000000000000000000"
+    );
+
+    // // Initialize mock Aave contracts
+    // aToken = await ATokenMock.new(stablecoin.address);
+    // if (!aTokenAddresssList.includes(aToken.address)) {
+    //   aTokenAddresssList.push(aToken.address);
+    // }
+    // lendingPool = await LendingPoolMock.new();
+    // await lendingPool.setReserveAToken(stablecoin.address, aToken.address);
+    // lendingPoolAddressesProvider = await LendingPoolAddressesProviderMock.new();
+    // await lendingPoolAddressesProvider.setLendingPoolImpl(lendingPool.address);
+    // moola = await ERC20Mock.new();
+
+    // // Mint stablecoins
+    // const mintAmount = 1000 * STABLECOIN_PRECISION;
+    // await stablecoin.mint(lendingPool.address, num2str(mintAmount));
+
+    // Initialize the money market
+    const marketTemplate = await MobiusMarket.new();
+    const marketReceipt = await factory.createMobiusMarket(
+      marketTemplate.address,
+      DEFAULT_SALT,
+      mobius.address,
+      accounts[0],
+      stablecoin.address,
+      2
+    );
+    return await factoryReceiptToContract(marketReceipt, MobiusMarket);
+  };
+
+  const timePass = async timeInYears => {
+    // await timeTravel(timeInYears * YEAR_IN_SEC);
+    // for (const aTokenAddress of aTokenAddresssList) {
+    //   const aToken = await ATokenMock.at(aTokenAddress);
+    //   await aToken.mintInterest(num2str(timeInYears * YEAR_IN_SEC));
+    // }
+  };
+
+  return {
+    deployMoneyMarket,
+    timePass
+  };
+};
+
 const bProtocolMoneyMarketModule = () => {
   // Contract artifacts
   const BProtocolMarket = artifacts.require("BProtocolMarket");
@@ -491,15 +586,25 @@ const creamERC20MoneyMarketModule = () => {
   };
 
   const timePass = async timeInYears => {
-    await timeTravel(timeInYears * YEAR_IN_SEC);
-    for (const cTokenAddress of cTokenAddressList) {
-      const cToken = await CERC20Mock.at(cTokenAddress);
-      const currentExRate = BigNumber(await cToken.exchangeRateStored());
-      const rateAfterTimePasses = BigNumber(currentExRate).times(
-        1 + timeInYears * INIT_INTEREST_RATE
-      );
-      await cToken._setExchangeRateStored(num2str(rateAfterTimePasses));
-    }
+    // await timeTravel(timeInYears * YEAR_IN_SEC);
+    // for (const cTokenAddress of cTokenAddressList) {
+    //   const cToken = await CERC20Mock.at(cTokenAddress);
+    //   const currentExRate = BigNumber(await cToken.exchangeRateStored());
+    //   const rateAfterTimePasses = BigNumber(currentExRate).times(
+    //     1 + timeInYears * INIT_INTEREST_RATE
+    //   );
+    //   await cToken._setExchangeRateStored(num2str(rateAfterTimePasses));
+    // }
+    // await timeTravel(timeInYears * YEAR_IN_SEC);
+    // for (const vaultAddress of vaultAddressList) {
+    //   const vault = await VaultMock.at(vaultAddress);
+    //   const mintAmount = BigNumber(await stablecoin.balanceOf(vault.address))
+    //     .times(INIT_INTEREST_RATE)
+    //     .times(timeInYears);
+    //   if (mintAmount.gt(0)) {
+    //     await stablecoin.mint(vault.address, num2str(mintAmount));
+    //   }
+    // }
   };
 
   return {
@@ -624,14 +729,18 @@ const yvaultMoneyMarketModule = () => {
 };
 
 const moneyMarketModuleList = (module.exports.moneyMarketModuleList = [
+  // {
+  //   name: "Aave",
+  //   moduleGenerator: aaveMoneyMarketModule
+  // },
+  // {
+  //   name: "Moola",
+  //   moduleGenerator: moolaMoneyMarketModule
+  // },
   {
-    name: "Aave",
-    moduleGenerator: aaveMoneyMarketModule
-  },
-  {
-    name: "Moola",
-    moduleGenerator: moolaMoneyMarketModule
-  },
+    name: "Mobius",
+    moduleGenerator: mobiusMoneyMarketModule
+  }
   // {
   //   name: "B.Protocol",
   //   moduleGenerator: bProtocolMoneyMarketModule
