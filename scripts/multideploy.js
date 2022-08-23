@@ -30,6 +30,9 @@ async function main() {
       case "aave":
         templatePoolName = "88mph DAI via Aave";
         break;
+      case "moola":
+        templatePoolName = "88mph DAI via Moola";
+        break;
       case "compound":
         templatePoolName = "88mph DAI via Compound";
         break;
