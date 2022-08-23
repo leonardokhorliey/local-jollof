@@ -1,19 +1,23 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity 0.8.4;
 
-import {SafeERC20} from '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
+import {
+    SafeERC20
+} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {
     AddressUpgradeable
 } from "@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol";
+import {PRBMathUD60x18} from "prb-math/contracts/PRBMathUD60x18.sol";
 import {MoneyMarket} from "../MoneyMarket.sol";
 import {ISwap} from "./interfaces/ISwap.sol";
 
+import "hardhat/console.sol";
+
 contract MobiusMarket is MoneyMarket {
+    using PRBMathUD60x18 for uint256;
     using SafeERC20 for ERC20;
     using AddressUpgradeable for address;
-
-    uint16 internal constant REFERRALCODE = 20; // Aave referral program code
 
     ERC20 public override stablecoin;
     ERC20 public lpToken;
@@ -31,8 +35,7 @@ contract MobiusMarket is MoneyMarket {
 
         // Verify input addresses
         require(
-                _mobiusSwap.isContract() &&
-                _stablecoin.isContract(),
+            _mobiusSwap.isContract() && _stablecoin.isContract(),
             "MobiusMarket: An input address is not a contract"
         );
 
@@ -61,11 +64,17 @@ contract MobiusMarket is MoneyMarket {
         returns (uint256 amountWithdrawn)
     {
         require(amount > 0, "MobiusMarket: amount is 0");
-        
-        lpToken.safeIncreaseAllowance(address(mobiusSwap), amount);
-        amountWithdrawn = (mobiusSwap.removeLiquidityOneToken(
-            amount, tokenIndex, 0, block.timestamp + 1
-        ));
+        uint256 lpPrice = mobiusSwap.getVirtualPrice();
+        uint256 lpAmount = amount.div(lpPrice);
+        lpToken.safeIncreaseAllowance(address(mobiusSwap), lpAmount);
+        amountWithdrawn = (
+            mobiusSwap.removeLiquidityOneToken(
+                lpAmount,
+                tokenIndex,
+                0,
+                block.timestamp + 1
+            )
+        );
         stablecoin.safeTransfer(msg.sender, amountWithdrawn);
     }
 
@@ -99,7 +108,7 @@ contract MobiusMarket is MoneyMarket {
     function _totalValue(
         uint256 /*currentIncomeIndex*/
     ) internal view override returns (uint256) {
-        return lpToken.balanceOf(address(this)) * _incomeIndex();
+        return lpToken.balanceOf(address(this)).mul(_incomeIndex());
     }
 
     function _incomeIndex() internal view override returns (uint256 index) {

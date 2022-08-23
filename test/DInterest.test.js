@@ -140,7 +140,7 @@ contract("DInterest", accounts => {
         });
 
         context("edge cases", () => {
-          xit("should fail with very short deposit period", async () => {
+          it("should fail with very short deposit period", async () => {
             const depositAmount = 100 * Base.STABLECOIN_PRECISION;
 
             // acc0 deposits for 1 second
@@ -156,7 +156,7 @@ contract("DInterest", accounts => {
             } catch (error) {}
           });
 
-          xit("should fail with greater than maximum deposit period", async function() {
+          it("should fail with greater than maximum deposit period", async function() {
             const depositAmount = 100 * Base.STABLECOIN_PRECISION;
 
             // acc0 deposits for 10 years
@@ -172,7 +172,7 @@ contract("DInterest", accounts => {
             } catch (error) {}
           });
 
-          xit("should fail with less than minimum deposit amount", async function() {
+          it("should fail with less than minimum deposit amount", async function() {
             const depositAmount = 0.001 * Base.STABLECOIN_PRECISION;
 
             // acc0 deposits for 1 year
@@ -192,7 +192,7 @@ contract("DInterest", accounts => {
 
       describe("topupDeposit", () => {
         context("happy path", () => {
-          xit("should update global variables correctly", async () => {
+          it("should update global variables correctly", async () => {
             const depositAmount = 100 * Base.STABLECOIN_PRECISION;
 
             // acc0 deposits for 1 year
@@ -256,7 +256,7 @@ contract("DInterest", accounts => {
             );
           });
 
-          xit("should transfer funds correctly", async () => {
+          it("should transfer funds correctly", async () => {
             const depositAmount = 100 * Base.STABLECOIN_PRECISION;
 
             // acc0 deposits for 1 year
@@ -306,7 +306,7 @@ contract("DInterest", accounts => {
             );
           });
 
-          xit("should withdraw correctly", async () => {
+          it("should withdraw correctly", async () => {
             const depositAmount = 100 * Base.STABLECOIN_PRECISION;
 
             // acc0 deposits for 1 year
@@ -430,7 +430,7 @@ contract("DInterest", accounts => {
             );
           });
 
-          xit("should create a new deposit with new maturationTimestamp and deposit amount increased", async function() {
+          it("should create a new deposit with new maturationTimestamp and deposit amount increased", async function() {
             // Wait 1 year (maturation time)
             await moneyMarketModule.timePass(1);
             const blockNow = await Base.latestBlockTimestamp();
@@ -500,7 +500,7 @@ contract("DInterest", accounts => {
           });
 
           context("full withdrawal", () => {
-            xit("should update global variables correctly", async () => {
+            it("should update global variables correctly", async () => {
               // Withdraw
               await baseContracts.dInterestPool.withdraw(1, Base.INF, false, {
                 from: acc0
@@ -529,7 +529,7 @@ contract("DInterest", accounts => {
               Base.assertEpsilonEq(totalFeeOwed, 0, "totalFeeOwed incorrect");
             });
 
-            xit("should transfer funds correctly", async function() {
+            it("should transfer funds correctly", async function() {
               const acc0BeforeBalance = BigNumber(
                 await baseContracts.stablecoin.balanceOf(acc0)
               );
@@ -597,7 +597,7 @@ contract("DInterest", accounts => {
                 .integerValue();
             });
 
-            xit("should update global variables correctly", async () => {
+            it("should update global variables correctly", async () => {
               // Withdraw
               await baseContracts.dInterestPool.withdraw(
                 1,
@@ -651,7 +651,7 @@ contract("DInterest", accounts => {
               );
             });
 
-            xit("should transfer funds correctly", async function() {
+            it("should transfer funds correctly", async function() {
               const acc0BeforeBalance = BigNumber(
                 await baseContracts.stablecoin.balanceOf(acc0)
               );
@@ -729,7 +729,7 @@ contract("DInterest", accounts => {
           });
 
           context("full withdrawal", () => {
-            xit("should update global variables correctly", async () => {
+            it("should update global variables correctly", async () => {
               // Withdraw
               await baseContracts.dInterestPool.withdraw(1, Base.INF, true, {
                 from: acc0
@@ -758,7 +758,7 @@ contract("DInterest", accounts => {
               Base.assertEpsilonEq(totalFeeOwed, 0, "totalFeeOwed incorrect");
             });
 
-            xit("should transfer funds correctly", async () => {
+            it("should transfer funds correctly", async () => {
               const acc0BeforeBalance = BigNumber(
                 await baseContracts.stablecoin.balanceOf(acc0)
               );
@@ -814,7 +814,7 @@ contract("DInterest", accounts => {
                 .integerValue();
             });
 
-            xit("should update global variables correctly", async () => {
+            it("should update global variables correctly", async () => {
               // Withdraw
               await baseContracts.dInterestPool.withdraw(
                 1,
@@ -868,7 +868,7 @@ contract("DInterest", accounts => {
               );
             });
 
-            xit("should transfer funds correctly", async function() {
+            it("should transfer funds correctly", async function() {
               const acc0BeforeBalance = BigNumber(
                 await baseContracts.stablecoin.balanceOf(acc0)
               );
@@ -918,7 +918,7 @@ contract("DInterest", accounts => {
         });
 
         context("complex examples", () => {
-          xit("two deposits with overlap", async () => {
+          it("two deposits with overlap", async () => {
             const depositAmount = 10 * Base.STABLECOIN_PRECISION;
 
             // acc0 deposits for 1 year
@@ -1028,7 +1028,7 @@ contract("DInterest", accounts => {
 
       describe("fund", () => {
         context("happy path", () => {
-          xit("fund 100% at the beginning", async () => {
+          it("fund 100% at the beginning", async () => {
             const depositAmount = 100 * Base.STABLECOIN_PRECISION;
 
             // acc0 deposits for 1 year
@@ -1081,7 +1081,7 @@ contract("DInterest", accounts => {
             );
           });
 
-          xit("two funders fund 70% at 20% maturation", async () => {
+          it("two funders fund 70% at 20% maturation", async () => {
             const depositAmount = 100 * Base.STABLECOIN_PRECISION;
 
             // acc0 deposits for 1 year
@@ -1183,7 +1183,7 @@ contract("DInterest", accounts => {
             );
           });
 
-          xit("fund 10% then withdraw 50%", async () => {
+          it("fund 10% then withdraw 50%", async () => {
             const depositAmount = 100 * Base.STABLECOIN_PRECISION;
 
             // acc0 deposits for 1 year
@@ -1260,7 +1260,7 @@ contract("DInterest", accounts => {
             );
           });
 
-          xit("fund 90% then withdraw 50%", async () => {
+          it("fund 90% then withdraw 50%", async () => {
             const depositAmount = 100 * Base.STABLECOIN_PRECISION;
 
             // acc0 deposits for 1 year
@@ -1369,7 +1369,7 @@ contract("DInterest", accounts => {
         });
 
         context("complex cases", () => {
-          xit("one funder funds 10% at the beginning, then another funder funds 70% at 20% maturation", async () => {
+          it("one funder funds 10% at the beginning, then another funder funds 70% at 20% maturation", async () => {
             const depositAmount = 100 * Base.STABLECOIN_PRECISION;
 
             // acc0 deposits for 1 year
@@ -1485,7 +1485,7 @@ contract("DInterest", accounts => {
         });
 
         context("edge cases", () => {
-          xit("fund 90%, wait, withdraw 100%, topup, fund 60%", async () => {
+          it("fund 90%, wait, withdraw 100%, topup, fund 60%", async () => {
             const depositAmount = 100 * Base.STABLECOIN_PRECISION;
 
             // acc0 deposits for 1 year
@@ -1636,7 +1636,7 @@ contract("DInterest", accounts => {
             );
           });
 
-          xit("fund 90%, wait, withdraw 99%, topup, fund 90%", async () => {
+          it("fund 90%, wait, withdraw 99%, topup, fund 90%", async () => {
             const depositAmount = 100 * Base.STABLECOIN_PRECISION;
 
             // acc0 deposits for 1 year
@@ -1812,7 +1812,7 @@ contract("DInterest", accounts => {
 
       describe("payInterestToFunders", () => {
         context("happy path", () => {
-          xit("single deposit, two payouts", async () => {
+          it("single deposit, two payouts", async () => {
             const depositAmount = 10 * Base.STABLECOIN_PRECISION;
 
             // acc0 deposits stablecoin into the DInterest pool for 1 year
@@ -1883,7 +1883,7 @@ contract("DInterest", accounts => {
       });
 
       describe("calculateInterestAmount", () => {
-        xit("one year deposit", async () => {
+        it("one year deposit", async () => {
           const depositAmount = 10 * Base.STABLECOIN_PRECISION;
           const depositTime = 1 * Base.YEAR_IN_SEC;
           const expectedInterestAmount = Base.calcInterestAmount(
@@ -1903,7 +1903,7 @@ contract("DInterest", accounts => {
           );
         });
 
-        xit("half year deposit", async () => {
+        it("half year deposit", async () => {
           const depositAmount = 10 * Base.STABLECOIN_PRECISION;
           const depositTime = 0.5 * Base.YEAR_IN_SEC;
           const expectedInterestAmount = Base.calcInterestAmount(
@@ -1923,7 +1923,7 @@ contract("DInterest", accounts => {
           );
         });
 
-        xit("one day deposit", async () => {
+        it("one day deposit", async () => {
           const depositAmount = 1000 * Base.STABLECOIN_PRECISION;
           const depositTime = 24 * 60 * 60;
           const expectedInterestAmount = Base.calcInterestAmount(
@@ -1943,7 +1943,7 @@ contract("DInterest", accounts => {
           );
         });
 
-        xit("0 time deposit", async () => {
+        it("0 time deposit", async () => {
           const depositAmount = 10 * Base.STABLECOIN_PRECISION;
           const depositTime = 0;
           const expectedInterestAmount = Base.calcInterestAmount(
@@ -1966,7 +1966,7 @@ contract("DInterest", accounts => {
 
       describe("totalInterestOwedToFunders", () => {
         context("happy path", () => {
-          xit("single deposit", async () => {
+          it("single deposit", async () => {
             const depositAmount = 10 * Base.STABLECOIN_PRECISION;
 
             // acc0 deposits for 1 year
@@ -2013,7 +2013,7 @@ contract("DInterest", accounts => {
       describe("surplus", () => {
         const depositAmount = 100 * Base.STABLECOIN_PRECISION;
 
-        xit("single deposit", async () => {
+        it("single deposit", async () => {
           // acc0 deposits for 1 year
           const blockNow = await Base.latestBlockTimestamp();
           await baseContracts.dInterestPool.deposit(
@@ -2063,7 +2063,7 @@ contract("DInterest", accounts => {
           }
         });
 
-        xit("two deposits", async () => {
+        it("two deposits", async () => {
           // acc0 deposits for 1 year
           const blockNow = await Base.latestBlockTimestamp();
           await baseContracts.dInterestPool.deposit(
@@ -2135,7 +2135,7 @@ contract("DInterest", accounts => {
           }
         });
 
-        xit("two deposits at different times", async () => {
+        it("two deposits at different times", async () => {
           // acc0 deposits for 1 year
           let blockNow = await Base.latestBlockTimestamp();
           await baseContracts.dInterestPool.deposit(
@@ -2230,7 +2230,7 @@ contract("DInterest", accounts => {
           }
         });
 
-        xit("should be 0 after deposit & early withdraw", async () => {
+        it("should be 0 after deposit & early withdraw", async () => {
           // acc0 deposits for 1 year
           const blockNow = await Base.latestBlockTimestamp();
           await baseContracts.dInterestPool.deposit(
@@ -2276,7 +2276,7 @@ contract("DInterest", accounts => {
       describe("rawSurplusOfDeposit", () => {
         const depositAmount = 10 * Base.STABLECOIN_PRECISION;
 
-        xit("simple deposit", async () => {
+        it("simple deposit", async () => {
           // acc0 deposits for 1 year
           const blockNow = await Base.latestBlockTimestamp();
           await baseContracts.dInterestPool.deposit(
@@ -2333,7 +2333,7 @@ contract("DInterest", accounts => {
           }
         });
 
-        xit("should be 0 after deposit & early withdraw", async () => {
+        it("should be 0 after deposit & early withdraw", async () => {
           // acc0 deposits for 1 year
           const blockNow = await Base.latestBlockTimestamp();
           await baseContracts.dInterestPool.deposit(
@@ -2358,7 +2358,7 @@ contract("DInterest", accounts => {
           Base.assertEpsilonEq(surplusAmount, 0, "surplus amount incorrect");
         });
 
-        xit("should be the same after deposit & early withdraw & topup", async () => {
+        it("should be the same after deposit & early withdraw & topup", async () => {
           // acc0 deposits for 1 year
           const blockNow = await Base.latestBlockTimestamp();
           await baseContracts.dInterestPool.deposit(
@@ -2406,7 +2406,7 @@ contract("DInterest", accounts => {
       describe("surplusOfDeposit", () => {
         const depositAmount = 10 * Base.STABLECOIN_PRECISION;
 
-        xit("simple deposit", async () => {
+        it("simple deposit", async () => {
           // acc0 deposits for 1 year
           const blockNow = await Base.latestBlockTimestamp();
           await baseContracts.dInterestPool.deposit(
@@ -2463,7 +2463,7 @@ contract("DInterest", accounts => {
           }
         });
 
-        xit("should be 0 after deposit & early withdraw", async () => {
+        it("should be 0 after deposit & early withdraw", async () => {
           // acc0 deposits for 1 year
           const blockNow = await Base.latestBlockTimestamp();
           await baseContracts.dInterestPool.deposit(
@@ -2488,7 +2488,7 @@ contract("DInterest", accounts => {
           Base.assertEpsilonEq(surplusAmount, 0, "surplus amount incorrect");
         });
 
-        xit("should be the same after deposit & early withdraw & topup", async () => {
+        it("should be the same after deposit & early withdraw & topup", async () => {
           // acc0 deposits for 1 year
           const blockNow = await Base.latestBlockTimestamp();
           await baseContracts.dInterestPool.deposit(
@@ -2532,7 +2532,7 @@ contract("DInterest", accounts => {
           );
         });
 
-        xit("should be 0 after fully funded", async () => {
+        it("should be 0 after fully funded", async () => {
           // acc0 deposits for 1 year
           const blockNow = await Base.latestBlockTimestamp();
           await baseContracts.dInterestPool.deposit(
@@ -2555,7 +2555,7 @@ contract("DInterest", accounts => {
           Base.assertEpsilonEq(surplusAmount, 0, "surplus amount incorrect");
         });
 
-        xit("should be correct after partially funded", async () => {
+        it("should be correct after partially funded", async () => {
           // acc0 deposits for 1 year
           const blockNow = await Base.latestBlockTimestamp();
           await baseContracts.dInterestPool.deposit(
@@ -2605,7 +2605,7 @@ contract("DInterest", accounts => {
 
       describe("withdrawableAmountOfDeposit", () => {
         context("happy path", () => {
-          xit("simple deposit", async () => {
+          it("simple deposit", async () => {
             const depositAmount = 10 * Base.STABLECOIN_PRECISION;
 
             // acc0 deposits stablecoin into the DInterest pool for 1 year
@@ -2693,7 +2693,7 @@ contract("DInterest", accounts => {
 
       describe("accruedInterestOfFunding", () => {
         context("happy path", () => {
-          xit("single deposit, two payouts", async () => {
+          it("single deposit, two payouts", async () => {
             const depositAmount = 10 * Base.STABLECOIN_PRECISION;
 
             // acc0 deposits stablecoin into the DInterest pool for 1 year
