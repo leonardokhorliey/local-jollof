@@ -25,7 +25,6 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
           args: [
             moolaConfig.lendingPoolAddressesProvider,
             poolConfig.moneyMarketParams.aToken,
-            moolaConfig.moolaMining,
             rewardRecipient,
             config.govTreasury,
             poolConfig.stablecoin
