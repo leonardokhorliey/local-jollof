@@ -1,6 +1,6 @@
 {
-  "network": "mainnet",
-  "pool": "aave-dai",
-  "protocol": "aave",
+  "network": "ganache",
+  "pool": "mobius-cusd1",
+  "protocol": "mobius",
   "decimals": 18
 }
