@@ -1,0 +1,21 @@
+{
+  "name": "88mph cUSD via Moola",
+  "nftNamePrefix": "88mph cUSD via Moola",
+  "nftSymbolPrefix": "88mph-cUSD-via-Moola-",
+  "moneyMarket": "MobiusMarket",
+  "interestModel": "LinearDecayInterestModel",
+  "interestOracle": "EMAOracle",
+  "feeModel": "PercentageFeeModel",
+  "MaxDepositPeriod": 31556952,
+  "MinDepositAmount": 100e18,
+  "stablecoin": "0x765DE816845861e75A25fCA122bb6898B8B1282a",
+  "EMAInitial": 3.6428e8,
+  "EMAUpdateInverval": 86400,
+  "EMASmoothingFactor": 2e18,
+  "EMAAverageWindowInIntervals": 30,
+  "moneyMarketParams": {
+    "swap": "0x0ff04189Ef135b6541E56f7C638489De92E9c778",
+    "swapLength": 2
+  },
+  "fundingMultitokenMetadataURI": ""
+}
