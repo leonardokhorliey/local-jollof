@@ -8,6 +8,10 @@ contract ERC20Mock is ERC20("", "") {
         _mint(to, amount);
     }
 
+    function burn(address to, uint256 amount) public {
+        _burn(to, amount);
+    }
+
     function decimals() public pure override returns (uint8) {
         return 6;
     }
