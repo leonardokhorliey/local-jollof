@@ -1,7 +1,7 @@
 import { waffle, ethers } from "hardhat";
 import { Fixture } from "ethereum-waffle";
 import { expect, use } from "chai";
-import { NFTDescriptor, NFTDescriptorTest, NFTWithSVG } from "../../typechain";
+import { NFTDescriptor, NFTDescriptorTest, NFTWithSVG } from "../../typechain/";
 
 use(require("chai-bignumber")());
 
