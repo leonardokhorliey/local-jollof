@@ -2,13 +2,13 @@ import "@nomiclabs/hardhat-truffle5";
 import "@nomiclabs/hardhat-web3";
 import "solidity-coverage";
 import "hardhat-deploy";
-//import "hardhat-gas-reporter";
+import "hardhat-gas-reporter";
 import "@nomiclabs/hardhat-solhint";
 import "hardhat-spdx-license-identifier";
 import "hardhat-docgen";
 import "@nomiclabs/hardhat-etherscan";
 import "@openzeppelin/hardhat-upgrades";
-//import "hardhat-contract-sizer";
+import "hardhat-contract-sizer";
 import "@typechain/hardhat";
 import "@nomiclabs/hardhat-ethers";
 import "@nomiclabs/hardhat-waffle";
@@ -41,7 +41,7 @@ const config: HardhatUserConfig = {
   },
   namedAccounts: {
     deployer: {
-      default: 1
+      default: 0
     }
   },
   paths: {
@@ -61,17 +61,17 @@ const config: HardhatUserConfig = {
     },
     alfajores: {
       url: "https://alfajores-forno.celo-testnet.org",
+      from: secret.account,
       accounts: {
-        mnemonic: process.env.MNEMONIC,
-        path: "m/44'/52752'/0'/0"
+        mnemonic: secret.mnemonic,
       },
       chainId: 44787
     },
     celo: {
       url: "https://forno.celo.org",
+      from: secret.account,
       accounts: {
-        mnemonic: process.env.MNEMONIC,
-        path: "m/44'/52752'/0'/0"
+        mnemonic: secret.mnemonic,
       },
       chainId: 42220
     },
@@ -89,9 +89,6 @@ const config: HardhatUserConfig = {
           "https://polygon-rpc.com"
       },*/
       allowUnlimitedContractSize: true
-    },
-    localhost: {
-      url: "http://127.0.0.1:8545",
     },
     rinkeby: {
       url:
@@ -126,9 +123,6 @@ const config: HardhatUserConfig = {
       accounts: {
         mnemonic: secret.mnemonic
       }
-    },
-    localhost: {
-      url: "http://127.0.0.1:8545",
     }
   },
   spdxLicenseIdentifier: {
@@ -143,12 +137,12 @@ const config: HardhatUserConfig = {
     timeout: 60000
   },
   etherscan: {
-    apiKey: "SCTNNP3MJK18WV84QIX6WPGMWIS8H1J9W7"
+    apiKey: ""
   },
-  //gasReporter: {
-  //  currency: "USD",
-  //  coinmarketcap: "b0c64afd-6aca-4201-8779-db8dc03e9793"
-  //},
+  gasReporter: {
+    currency: "USD",
+    coinmarketcap: "b0c64afd-6aca-4201-8779-db8dc03e9793"
+  },
   typechain: {
     target: "ethers-v5"
   }

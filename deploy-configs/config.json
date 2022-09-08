@@ -1,6 +1,1 @@
-{
-  "network": "ganache",
-  "pool": "mobius-cusd1",
-  "protocol": "mobius",
-  "decimals": 18
-}
+{ "network": "alfajores", "pool": "moola-cusd", "protocol": "moola" }
