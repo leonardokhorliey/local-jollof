@@ -1,8 +1,8 @@
 {
-  "govTreasury": "",
-  "devWallet": "",
-  "govTimelock": "",
-  "oneSplitAddress": "",
+  "govTreasury": "0x2B0bf86E5b94341fa5Ab205C00b981c8719f1b44",
+  "devWallet": "0x2B0bf86E5b94341fa5Ab205C00b981c8719f1b44",
+  "govTimelock": "0x2B0bf86E5b94341fa5Ab205C00b981c8719f1b44",
+  "oneSplitAddress": "0x2B0bf86E5b94341fa5Ab205C00b981c8719f1b44",
   "mph": "",
   "devRewardMultiplier": 0.1e18,
   "govRewardMultiplier": 0.1e18,

@@ -1,6 +1,7 @@
 //Mobius market test on live network
 //Run ganache-cli --fork "https://forno.celo.org" --unlock "0xC32cBaf3D44dA6fbC761289b871af1A30cc7f993"
 //in the background
+//Run test npx hardhat test test/MobiusMainnet.test.js --network ganache
 
 // Libraries
 const BigNumber = require("bignumber.js");
@@ -77,7 +78,7 @@ const ERC20Mock = artifacts.require("ERC20Mock");
 const routerAbi = require("./abi/routerAbi");
 
 contract("MobiusMarket", accounts => {
-  xdescribe("MobiusMarket", () => {
+  describe("MobiusMarket", () => {
     beforeEach(async () => {
       acc0 = accounts[0];
       acc1 = accounts[1];

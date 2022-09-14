@@ -1,5 +1,5 @@
 {
-  "address": "0x06AdE741a38F89d32DaeB057C38D185c6B4178d9",
+  "address": "0x7f6A8D0066ec3777CA5E5E7c9D0083D1A302df16",
   "abi": [
     {
       "inputs": [
@@ -217,24 +217,24 @@
     "logs": [
       {
         "address": "0xD0414fBBa0aa7A005ba9f632BdcFd8124aE40bc6",
-        "blockNumber": 13558406,
-        "transactionHash": "0x785d5e843ac61f7290c4337d40e56367cd6b28d6da020e30535a3b488182310d",
-        "transactionIndex": 0,
-        "blockHash": "0xf766168a66119cfaf60a65c025472e569fa1af6bb818cea446d46702e2f180f3",
+        "blockNumber": 13558455,
+        "transactionHash": "0x2017a033fa381c52cac492fd915a3ffe4c009ffdb4579a0cab525db3da52a993",
+        "transactionIndex": 1,
+        "blockHash": "0x5730d8c247b778fb6171ac2b7650b4e1696b508b5f39b32ae6c088b290dd307e",
         "logIndex": 0,
         "removed": false,
-        "id": "log_7c92da78",
+        "id": "log_e43c94c1",
         "event": "CreateClone",
         "args": {
           "0": "0xf6b12bbdcba3d81899dd38eee1b4a90c3423cf47e4fcaed36a0f50a7c8793bb4",
           "1": "0xed80246d296a7C073C0cEe6801F9AfEeEF21Dc32",
-          "2": "0x1833bbe2e1000000000000000000000000000000000000000000000000000000",
-          "3": "0x06AdE741a38F89d32DaeB057C38D185c6B4178d9",
+          "2": "0x1833bc1fa3400000000000000000000000000000000000000000000000000000",
+          "3": "0x7f6A8D0066ec3777CA5E5E7c9D0083D1A302df16",
           "__length__": 4,
           "contractName": "0xf6b12bbdcba3d81899dd38eee1b4a90c3423cf47e4fcaed36a0f50a7c8793bb4",
           "template": "0xed80246d296a7C073C0cEe6801F9AfEeEF21Dc32",
-          "salt": "0x1833bbe2e1000000000000000000000000000000000000000000000000000000",
-          "clone": "0x06AdE741a38F89d32DaeB057C38D185c6B4178d9"
+          "salt": "0x1833bc1fa3400000000000000000000000000000000000000000000000000000",
+          "clone": "0x7f6A8D0066ec3777CA5E5E7c9D0083D1A302df16"
         }
       }
     ]
