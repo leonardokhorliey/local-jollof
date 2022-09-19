@@ -23,7 +23,7 @@ const aavePoolAbi = require("./abi/aavePool");
 const aTokenAbi = require("./abi/aToken");
 
 contract("AaveMarket", accounts => {
-  describe("AaveMarket", () => {
+  xdescribe("AaveMarket", () => {
     beforeEach(async () => {
       await network.provider.request({
         method: "hardhat_impersonateAccount",

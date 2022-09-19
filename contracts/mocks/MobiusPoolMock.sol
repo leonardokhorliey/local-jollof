@@ -5,8 +5,6 @@ pragma solidity 0.8.4;
 import {ERC20Mock} from "./ERC20Mock.sol";
 import {PRBMathUD60x18} from "prb-math/contracts/PRBMathUD60x18.sol";
 
-import "hardhat/console.sol";
-
 contract MobiusPoolMock {
     using PRBMathUD60x18 for uint256;
 
@@ -18,7 +16,7 @@ contract MobiusPoolMock {
     constructor(address _lpToken, address _stablecoin) {
         lpToken = ERC20Mock(_lpToken);
         stablecoin = ERC20Mock(_stablecoin);
-        _virtualPrice = 1100 * 10**15; // 1 cUSD LP = 1.1 cUSD
+        _virtualPrice = 2 * 10**18; // 1 cUSD LP = 2 cUSD
     }
 
     function addLiquidity(
@@ -40,8 +38,6 @@ contract MobiusPoolMock {
     ) external returns (uint256) {
         uint256 amountToTransfer =
             amount.mul(PRECISION).mul(_virtualPrice).div(PRECISION);
-        //substract 1 to mitigate rounding error
-        if (amount > lpToken.balanceOf(msg.sender)) amount -= 1;
         lpToken.burn(msg.sender, amount);
         stablecoin.transfer(msg.sender, amountToTransfer);
         return amountToTransfer;

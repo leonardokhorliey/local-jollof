@@ -345,24 +345,20 @@ const mobiusMoneyMarketModule = () => {
   const mobiusPoolMock = artifacts.require("MobiusPoolMock");
   const mobiusLpMock = artifacts.require("ERC20Mock");
 
-  let bComptroller;
-  let cToken;
-  let comp;
-  let registry;
-  const cTokenAddressList = [];
-
   const INIT_INTEREST_RATE = 0.1; // 10% APY
+
+  let lpToken;
+  let mobiusPool;
+  const poolAddressList = [];
 
   const deployMoneyMarket = async (accounts, factory, stablecoin, rewards) => {
     // Deploy Mobius mock contracts
     lpToken = await mobiusLpMock.new();
     mobiusPool = await mobiusPoolMock.new(lpToken.address, stablecoin.address);
-    //if (!cTokenAddressList.includes(cToken.address)) {
-    //  cTokenAddressList.push(cToken.address);
-    //}
-    //comp = await ERC20Mock.new();
-    //registry = await RegistryMock.new(comp.address);
-    //bComptroller = await BComptrollerMock.new(registry.address);
+
+    if (!poolAddressList.includes(mobiusPool.address)) {
+      poolAddressList.push(mobiusPool.address);
+    }
 
     // Mint stablecoins
     const mintAmount = 1000 * STABLECOIN_PRECISION;
@@ -383,12 +379,15 @@ const mobiusMoneyMarketModule = () => {
 
   const timePass = async timeInYears => {
     await timeTravel(timeInYears * YEAR_IN_SEC);
-    //const cToken = await CERC20Mock.at(cTokenAddress);
-    const currentVirtualPrice = BigNumber(await mobiusPool.getVirtualPrice());
-    const virtualPriceAfterTimePasses = BigNumber(currentVirtualPrice).times(
-      1 + timeInYears * INIT_INTEREST_RATE
-    );
-    await mobiusPool.setVirtualPrice(num2str(virtualPriceAfterTimePasses));
+
+    for (const poolAddress of poolAddressList) {
+      const pool = await mobiusPoolMock.at(poolAddress);
+      const currentVirtualPrice = BigNumber(await pool.getVirtualPrice());
+      const virtualPriceAfterTimePasses = BigNumber(currentVirtualPrice).times(
+        1 + timeInYears * INIT_INTEREST_RATE
+      );
+      await pool.setVirtualPrice(num2str(virtualPriceAfterTimePasses));
+    }
   };
 
   return {
@@ -549,25 +548,15 @@ const creamERC20MoneyMarketModule = () => {
   };
 
   const timePass = async timeInYears => {
-    // await timeTravel(timeInYears * YEAR_IN_SEC);
-    // for (const cTokenAddress of cTokenAddressList) {
-    //   const cToken = await CERC20Mock.at(cTokenAddress);
-    //   const currentExRate = BigNumber(await cToken.exchangeRateStored());
-    //   const rateAfterTimePasses = BigNumber(currentExRate).times(
-    //     1 + timeInYears * INIT_INTEREST_RATE
-    //   );
-    //   await cToken._setExchangeRateStored(num2str(rateAfterTimePasses));
-    // }
-    // await timeTravel(timeInYears * YEAR_IN_SEC);
-    // for (const vaultAddress of vaultAddressList) {
-    //   const vault = await VaultMock.at(vaultAddress);
-    //   const mintAmount = BigNumber(await stablecoin.balanceOf(vault.address))
-    //     .times(INIT_INTEREST_RATE)
-    //     .times(timeInYears);
-    //   if (mintAmount.gt(0)) {
-    //     await stablecoin.mint(vault.address, num2str(mintAmount));
-    //   }
-    // }
+    await timeTravel(timeInYears * YEAR_IN_SEC);
+    for (const cTokenAddress of cTokenAddressList) {
+      const cToken = await CERC20Mock.at(cTokenAddress);
+      const currentExRate = BigNumber(await cToken.exchangeRateStored());
+      const rateAfterTimePasses = BigNumber(currentExRate).times(
+        1 + timeInYears * INIT_INTEREST_RATE
+      );
+      await cToken._setExchangeRateStored(num2str(rateAfterTimePasses));
+    }
   };
 
   return {
@@ -696,10 +685,10 @@ const moneyMarketModuleList = (module.exports.moneyMarketModuleList = [
   //   name: "Aave",
   //   moduleGenerator: aaveMoneyMarketModule
   // },
-  // {
-  //   name: "Moola",
-  //   moduleGenerator: moolaMoneyMarketModule
-  // },
+  {
+    name: "Moola",
+    moduleGenerator: moolaMoneyMarketModule
+  },
   {
     name: "Mobius",
     moduleGenerator: mobiusMoneyMarketModule

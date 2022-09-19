@@ -2,6 +2,7 @@
 //Hardhat forking is not working with celo network for some reason
 //Use npx ganache-cli --fork "https://forno.celo.org" --unlock "0xC32cBaf3D44dA6fbC761289b871af1A30cc7f993"
 //to run this test
+//Run test npx hardhat test test/MoolaMarketMainnet.test.js --network ganache
 
 // Libraries
 const BigNumber = require("bignumber.js");
@@ -24,7 +25,7 @@ const moolaPoolAbi = require("./abi/aavePool");
 const mTokenAbi = require("./abi/aToken");
 
 contract("MoolaMarket", accounts => {
-  describe("MooolaMarket", () => {
+  xdescribe("MooolaMarket", () => {
     beforeEach(async () => {
       //await network.provider.request({
       //      method: "hardhat_impersonateAccount",

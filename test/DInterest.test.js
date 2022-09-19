@@ -2252,7 +2252,7 @@ contract("DInterest", accounts => {
           Base.assertEpsilonEq(surplusAmount, 0, "surplus amount incorrect");
         });
 
-        xit("should be 0 after deposit & fund", async () => {
+        it("should be 0 after deposit & fund", async () => {
           // acc0 deposits for 1 year
           const blockNow = await Base.latestBlockTimestamp();
           await baseContracts.dInterestPool.deposit(

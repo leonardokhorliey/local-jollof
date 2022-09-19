@@ -22,7 +22,6 @@ import {MPHMinter} from "./rewards/MPHMinter.sol";
 import {IInterestOracle} from "./models/interest-oracle/IInterestOracle.sol";
 import {PRBMathUD60x18} from "prb-math/contracts/PRBMathUD60x18.sol";
 import {Rescuable} from "./libs/Rescuable.sol";
-import {console} from "hardhat/console.sol";
 
 /**
     @title DeLorean Interest -- It's coming back from the future!
