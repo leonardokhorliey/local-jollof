@@ -41,7 +41,7 @@ const config: HardhatUserConfig = {
   },
   namedAccounts: {
     deployer: {
-      default: 1
+      default: 0
     }
   },
   paths: {
@@ -55,6 +55,25 @@ const config: HardhatUserConfig = {
       accounts: {
         mnemonic: secret.mnemonic
       }
+    },
+    ganache: {
+      url: "http://127.0.0.1:8545"
+    },
+    alfajores: {
+      url: "https://alfajores-forno.celo-testnet.org",
+      from: secret.account,
+      accounts: {
+        mnemonic: secret.mnemonic,
+      },
+      chainId: 44787
+    },
+    celo: {
+      url: "https://forno.celo.org",
+      from: secret.account,
+      accounts: {
+        mnemonic: secret.mnemonic,
+      },
+      chainId: 42220
     },
     hardhat: {
       /*forking: {
@@ -118,7 +137,7 @@ const config: HardhatUserConfig = {
     timeout: 60000
   },
   etherscan: {
-    apiKey: "SCTNNP3MJK18WV84QIX6WPGMWIS8H1J9W7"
+    apiKey: ""
   },
   gasReporter: {
     currency: "USD",

@@ -1,0 +1,15 @@
+{
+  "govTreasury": "",
+  "devWallet": "",
+  "govTimelock": "",
+  "oneSplitAddress": "",
+  "mph": "",
+  "devRewardMultiplier": 0.1e18,
+  "govRewardMultiplier": 0.1e18,
+  "xMPHRewardUnlockPeriod": 1209600,
+  "interestFee": 0.2e18,
+  "earlyWithdrawFee": 0.005e18,
+  "interestRateMultiplierIntercept": 0.75e18,
+  "interestRateMultiplierSlope": 11883276940,
+  "isEthereum": false
+}

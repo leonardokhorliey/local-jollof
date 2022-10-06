@@ -82,6 +82,12 @@ contract("DInterest", accounts => {
           });
 
           it("should transfer funds correctly", async () => {
+            console.log(
+              BigNumber(
+                await baseContracts.market.incomeIndex.call()
+              ).toString()
+            );
+
             const depositAmount = 100 * Base.STABLECOIN_PRECISION;
 
             // acc0 deposits for 1 year
@@ -99,6 +105,12 @@ contract("DInterest", accounts => {
               { from: acc0 }
             );
 
+            console.log(
+              BigNumber(
+                await baseContracts.market.incomeIndex.call()
+              ).toString()
+            );
+
             const acc0CurrentBalance = BigNumber(
               await baseContracts.stablecoin.balanceOf(acc0)
             );
@@ -113,6 +125,11 @@ contract("DInterest", accounts => {
               "stablecoin not transferred out of acc0"
             );
 
+            console.log(
+              dInterestPoolBeforeBalance.toString(),
+              dInterestPoolCurrentBalance.toString(),
+              depositAmount
+            );
             // Verify stablecoin transferred into money market
             Base.assertEpsilonEq(
               dInterestPoolCurrentBalance.minus(dInterestPoolBeforeBalance),

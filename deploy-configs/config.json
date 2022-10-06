@@ -1,6 +1,1 @@
-{
-  "network": "mainnet",
-  "pool": "aave-dai",
-  "protocol": "aave",
-  "decimals": 18
-}
+{ "network": "alfajores", "pool": "mobius-cusdtest", "protocol": "mobius" }

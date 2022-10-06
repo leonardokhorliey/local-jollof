@@ -279,6 +279,123 @@ const aaveMoneyMarketModule = () => {
   };
 };
 
+const moolaMoneyMarketModule = () => {
+  // Contract artifacts
+  const MoolaMarket = artifacts.require("MoolaMarket");
+  const ATokenMock = artifacts.require("ATokenMock");
+  const LendingPoolMock = artifacts.require("LendingPoolMock");
+  const LendingPoolAddressesProviderMock = artifacts.require(
+    "LendingPoolAddressesProviderMock"
+  );
+  const ERC20Mock = artifacts.require("ERC20Mock");
+
+  let aToken;
+  let lendingPool;
+  let lendingPoolAddressesProvider;
+  let moola;
+  const aTokenAddresssList = [];
+
+  const deployMoneyMarket = async (accounts, factory, stablecoin, rewards) => {
+    // Initialize mock Aave contracts
+    aToken = await ATokenMock.new(stablecoin.address);
+    if (!aTokenAddresssList.includes(aToken.address)) {
+      aTokenAddresssList.push(aToken.address);
+    }
+    lendingPool = await LendingPoolMock.new();
+    await lendingPool.setReserveAToken(stablecoin.address, aToken.address);
+    lendingPoolAddressesProvider = await LendingPoolAddressesProviderMock.new();
+    await lendingPoolAddressesProvider.setLendingPoolImpl(lendingPool.address);
+    moola = await ERC20Mock.new();
+
+    // Mint stablecoins
+    const mintAmount = 1000 * STABLECOIN_PRECISION;
+    await stablecoin.mint(lendingPool.address, num2str(mintAmount));
+
+    // Initialize the money market
+    const marketTemplate = await MoolaMarket.new();
+    const marketReceipt = await factory.createMoolaMarket(
+      marketTemplate.address,
+      DEFAULT_SALT,
+      lendingPoolAddressesProvider.address,
+      aToken.address,
+      rewards,
+      accounts[0],
+      stablecoin.address
+    );
+    return await factoryReceiptToContract(marketReceipt, MoolaMarket);
+  };
+
+  const timePass = async timeInYears => {
+    await timeTravel(timeInYears * YEAR_IN_SEC);
+    for (const aTokenAddress of aTokenAddresssList) {
+      const aToken = await ATokenMock.at(aTokenAddress);
+      await aToken.mintInterest(num2str(timeInYears * YEAR_IN_SEC));
+    }
+  };
+
+  return {
+    deployMoneyMarket,
+    timePass
+  };
+};
+
+const mobiusMoneyMarketModule = () => {
+  // Contract artifacts
+  const mobiusMarket = artifacts.require("MobiusMarket");
+  const mobiusPoolMock = artifacts.require("MobiusPoolMock");
+  const mobiusLpMock = artifacts.require("ERC20Mock");
+
+  const INIT_INTEREST_RATE = 0.1; // 10% APY
+
+  let lpToken;
+  let mobiusPool;
+  const poolAddressList = [];
+
+  const deployMoneyMarket = async (accounts, factory, stablecoin, rewards) => {
+    // Deploy Mobius mock contracts
+    lpToken = await mobiusLpMock.new();
+    mobiusPool = await mobiusPoolMock.new(lpToken.address, stablecoin.address);
+
+    if (!poolAddressList.includes(mobiusPool.address)) {
+      poolAddressList.push(mobiusPool.address);
+    }
+
+    // Mint stablecoins
+    const mintAmount = 1000 * STABLECOIN_PRECISION;
+    await stablecoin.mint(mobiusPool.address, num2str(mintAmount));
+
+    // Initialize the money market
+    const marketTemplate = await mobiusMarket.new();
+    const marketReceipt = await factory.createMobiusMarket(
+      marketTemplate.address,
+      DEFAULT_SALT,
+      mobiusPool.address,
+      accounts[0],
+      stablecoin.address,
+      2
+    );
+    return await factoryReceiptToContract(marketReceipt, mobiusMarket);
+  };
+
+  const timePass = async timeInYears => {
+    await timeTravel(timeInYears * YEAR_IN_SEC);
+
+    for (const poolAddress of poolAddressList) {
+      const pool = await mobiusPoolMock.at(poolAddress);
+      const currentVirtualPrice = BigNumber(await pool.getVirtualPrice());
+      const virtualPriceAfterTimePasses = BigNumber(currentVirtualPrice).times(
+        1 + timeInYears * INIT_INTEREST_RATE
+      );
+      await pool.setVirtualPrice(num2str(virtualPriceAfterTimePasses));
+    }
+  };
+
+  return {
+    deployMoneyMarket,
+    timePass
+  };
+};
+
 const bProtocolMoneyMarketModule = () => {
   // Contract artifacts
   const BProtocolMarket = artifacts.require("BProtocolMarket");
@@ -564,30 +681,38 @@ const yvaultMoneyMarketModule = () => {
 };
 
 const moneyMarketModuleList = (module.exports.moneyMarketModuleList = [
+  // {
+  //   name: "Aave",
+  //   moduleGenerator: aaveMoneyMarketModule
+  // },
   {
-    name: "Aave",
-    moduleGenerator: aaveMoneyMarketModule
+    name: "Moola",
+    moduleGenerator: moolaMoneyMarketModule
   },
   {
-    name: "B.Protocol",
-    moduleGenerator: bProtocolMoneyMarketModule
-  },
-  {
-    name: "CompoundERC20",
-    moduleGenerator: compoundERC20MoneyMarketModule
-  },
-  {
-    name: "CreamERC20",
-    moduleGenerator: creamERC20MoneyMarketModule
-  },
-  {
-    name: "Harvest",
-    moduleGenerator: harvestMoneyMarketModule
-  },
-  {
-    name: "YVault",
-    moduleGenerator: yvaultMoneyMarketModule
+    name: "Mobius",
+    moduleGenerator: mobiusMoneyMarketModule
   }
+  // {
+  //   name: "B.Protocol",
+  //   moduleGenerator: bProtocolMoneyMarketModule
+  // },
+  // {
+  //   name: "CompoundERC20",
+  //   moduleGenerator: compoundERC20MoneyMarketModule
+  // },
+  // {
+  //   name: "CreamERC20",
+  //   moduleGenerator: creamERC20MoneyMarketModule
+  // },
+  // {
+  //   name: "Harvest",
+  //   moduleGenerator: harvestMoneyMarketModule
+  // },
+  // {
+  //   name: "YVault",
+  //   moduleGenerator: yvaultMoneyMarketModule
+  // }
 ]);
 
 const setupTest = (module.exports.setupTest = async (
@@ -644,7 +769,7 @@ const setupTest = (module.exports.setupTest = async (
   );
   await vesting02.setMPHMinter(mphMinter.address);
   await mph.transferOwnership(mphMinter.address);
-  await mphMinter.grantRole(WHITELISTER_ROLE, acc0, { from: acc0 });
+  await mphMinter.grantRole(WHITELISTER_ROLE, acc0, { from: govTreasury });
 
   // Initialize MPHConverter
   foreignMPH = await ERC20Mock.new();
@@ -655,7 +780,9 @@ const setupTest = (module.exports.setupTest = async (
     foreignMPH.address,
     dailyConvertLimit
   );
-  await mphMinter.grantRole(CONVERTER_ROLE, converter.address, { from: acc0 });
+  await mphMinter.grantRole(CONVERTER_ROLE, converter.address, {
+    from: govTreasury
+  });
   await mph.approve(converter.address, INF, { from: acc0 });
   await mph.approve(converter.address, INF, { from: acc1 });
   await mph.approve(converter.address, INF, { from: acc2 });
@@ -765,11 +892,13 @@ const setupTest = (module.exports.setupTest = async (
     });
     await mphMinter.setPoolDepositorRewardMintMultiplier(
       dInterestPool.address,
-      PoolDepositorRewardMintMultiplier
+      PoolDepositorRewardMintMultiplier,
+      { from: govTreasury }
     );
     await mphMinter.setPoolFunderRewardMultiplier(
       dInterestPool.address,
-      PoolFunderRewardMultiplier
+      PoolFunderRewardMultiplier,
+      { from: govTreasury }
     );
 
     // Transfer the ownership of the money market to the DInterest pool

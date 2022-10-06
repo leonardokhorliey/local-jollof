@@ -10,19 +10,19 @@
 
 ## Deploy DInterest pool
 
-Put the array of configs (in the format of `deployment-configs/config.json`) of the pools you want to deploy in `scripts/deploy-pool-list.json`. The list of configs should be in the following format:
+Put the array of configs (in the format of `deployment-configs/config.json`) of the pools you want to deploy in `scripts/multideploy-configs.json`. The list of configs should be in the following format:
 
 ```json
 [
     {
-        "network": "mainnet",
-        "pool": "aave-dai",
-        "protocol": "aave"
+        "network": "celo",
+        "pool": "moola-cusd",
+        "protocol": "moola"
     },
     {
-        "network": "mainnet",
-        "pool": "aave-usdc",
-        "protocol": "aave"
+        "network": "celo",
+        "pool": "mobius-cusd1",
+        "protocol": "mobius"
     },
     ...
 ]
@@ -31,8 +31,27 @@ Put the array of configs (in the format of `deployment-configs/config.json`) of 
 Note that the configs must have the same network field. Then, execute the following script:
 
 ```bash
-scripts/deploy-mainnet.sh [networkName]
+scripts/multideploy.sh [networkName]
 ```
+
+## Configs
+
+### Network
+
+Change values to your own. Keep isEthereum false or it will try to use mphToken from "mph" field (which will break the deployment if the deployer isn't mph owner).
+
+### Protocol
+
+Moola's config has to have `lendingPoolAddressesProvider` field which should be address of Moola's `LendingPoolAddressesProvider` contract (`0xD1088091A174d33412a968Fa34Cb67131188B332` in CELO). Mobius's can be empty, but don't remove it.
+
+### Pool
+
+Contains pool-specific variables, change it to your own.
+
+`stablecoin` - address of stablecoin for staking.
+`aToken` (only Moola) - address of aToken for this pool
+`swap` (only Mobius) - address of swap where stablecoin trades
+`swapLength` (only Mobius) - number of stablecoins in swap.
 
 ### Output subgraph config
 

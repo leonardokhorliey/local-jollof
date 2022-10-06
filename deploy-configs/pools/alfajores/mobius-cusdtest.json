@@ -1,0 +1,21 @@
+{
+  "name": "Jollof cUSD via Mobius",
+  "nftNamePrefix": "Jollof cUSD via Mobius",
+  "nftSymbolPrefix": "Jollof-cUSD-via-Mobius-",
+  "moneyMarket": "MobiusMarket",
+  "interestModel": "LinearDecayInterestModel",
+  "interestOracle": "EMAOracle",
+  "feeModel": "PercentageFeeModel",
+  "MaxDepositPeriod": 31556952,
+  "MinDepositAmount": 100e18,
+  "stablecoin": "0x7588110A070987ea0347Cf788226c28d1476d641",
+  "EMAInitial": 3.6428e8,
+  "EMAUpdateInverval": 86400,
+  "EMASmoothingFactor": 2e18,
+  "EMAAverageWindowInIntervals": 30,
+  "moneyMarketParams": {
+    "swap": "0xFB80520416685420751B2CD8E2c305aCbd5F756E",
+    "swapLength": 3
+  },
+  "fundingMultitokenMetadataURI": ""
+}

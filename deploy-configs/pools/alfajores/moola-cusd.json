@@ -1,0 +1,20 @@
+{
+  "name": "Jollof cUSD via Moola",
+  "nftNamePrefix": "Jollof cUSD via Moola",
+  "nftSymbolPrefix": "Jollof-cUSD-via-Moola-",
+  "moneyMarket": "MoolaMarket",
+  "interestModel": "LinearDecayInterestModel",
+  "interestOracle": "EMAOracle",
+  "feeModel": "PercentageFeeModel",
+  "MaxDepositPeriod": 31556952,
+  "MinDepositAmount": 100e18,
+  "stablecoin": "0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1",
+  "EMAInitial": 3.6428e8,
+  "EMAUpdateInverval": 86400,
+  "EMASmoothingFactor": 2e18,
+  "EMAAverageWindowInIntervals": 30,
+  "moneyMarketParams": {
+    "aToken": "0xe8B286649713447D8d5fBeBC28c731830d19B6C9"
+  },
+  "fundingMultitokenMetadataURI": ""
+}
