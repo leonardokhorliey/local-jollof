@@ -22,7 +22,8 @@ try {
 } catch {
   secret = {
     account: "",
-    mnemonic: ""
+    mnemonic: "",
+    apiKey: ""
   };
 }
 
@@ -99,6 +100,15 @@ const config: HardhatUserConfig = {
         mnemonic: secret.mnemonic
       }
     },
+    goerli: {
+      url:
+        "https://eth-goerli.alchemyapi.io/v2/2LxgvUYd5FzgiXVoAWlq-KyM4v-E7KJ4",
+      chainId: 5,
+      from: secret.account,
+      accounts: {
+        mnemonic: secret.mnemonic
+      }
+    },
     polygon: {
       url: "https://polygon-rpc.com",
       chainId: 137,
@@ -137,7 +147,7 @@ const config: HardhatUserConfig = {
     timeout: 60000
   },
   etherscan: {
-    apiKey: ""
+    apiKey: secret.apiKey
   },
   gasReporter: {
     currency: "USD",

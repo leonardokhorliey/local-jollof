@@ -21,7 +21,7 @@ module.exports = async ({ web3, getNamedAccounts, deployments, artifacts }) => {
     from: deployer,
     contract: "DInterest",
     proxy: {
-      owner: config.govTimelock,
+      owner: "0x940F80Cd7cA57a2565DAF3D79980f90A32233b80",
       proxyContract: "OptimizedTransparentProxy",
       execute: {
         init: {

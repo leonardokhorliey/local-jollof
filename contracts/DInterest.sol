@@ -165,8 +165,7 @@ contract DInterest is
         address _interestModel,
         address _interestOracle,
         address _depositNFT,
-        address _fundingMultitoken,
-        address _mphMinter
+        address _fundingMultitoken
     ) internal initializer {
         __ReentrancyGuard_init();
         __Ownable_init();
@@ -176,7 +175,7 @@ contract DInterest is
         interestOracle = IInterestOracle(_interestOracle);
         depositNFT = NFT(_depositNFT);
         fundingMultitoken = FundingMultitoken(_fundingMultitoken);
-        mphMinter = MPHMinter(_mphMinter);
+
         MaxDepositPeriod = _MaxDepositPeriod;
         MinDepositAmount = _MinDepositAmount;
     }
@@ -189,7 +188,7 @@ contract DInterest is
         @param _interestOracle Address of the InterestOracle contract that provides the average interest rate
         @param _depositNFT Address of the NFT representing ownership of deposits (owner must be set to this DInterest contract)
         @param _fundingMultitoken Address of the ERC1155 multitoken representing ownership of fundings (this DInterest contract must have the minter-burner role)
-        @param _mphMinter Address of the contract for handling minting MPH to users
+        
      */
     function initialize(
         uint64 _MaxDepositPeriod,
@@ -198,8 +197,7 @@ contract DInterest is
         address _interestModel,
         address _interestOracle,
         address _depositNFT,
-        address _fundingMultitoken,
-        address _mphMinter
+        address _fundingMultitoken
     ) external virtual initializer {
         __DInterest_init(
             _MaxDepositPeriod,
@@ -208,8 +206,7 @@ contract DInterest is
             _interestModel,
             _interestOracle,
             _depositNFT,
-            _fundingMultitoken,
-            _mphMinter
+            _fundingMultitoken
         );
     }
 
@@ -640,7 +637,7 @@ contract DInterest is
         );
 
         // Vest MPH to sender
-        mphMinter.createVestForDeposit(sender, depositID);
+        // mphMinter.createVestForDeposit(sender, depositID); // mphminnnn
     }
 
     function _depositTransferFunds(
@@ -751,11 +748,11 @@ contract DInterest is
         );
 
         // Update vest
-        mphMinter.updateVestForDeposit(
-            depositID,
-            currentDepositAmount,
-            depositAmount
-        );
+        // mphMinter.updateVestForDeposit(
+        //     depositID,
+        //     currentDepositAmount,
+        //     depositAmount
+        // ); // mphminnnn
     }
 
     function _topupDepositTransferFunds(address sender, uint256 depositAmount)
@@ -949,11 +946,11 @@ contract DInterest is
                 _getDeposit(depositID).virtualTokenTotalSupply.div(
                     interestRate + PRECISION
                 );
-            mphMinter.updateVestForDeposit(
-                depositID,
-                depositAmountBeforeWithdrawal,
-                0
-            );
+            // mphMinter.updateVestForDeposit(
+            //     depositID,
+            //     depositAmountBeforeWithdrawal,
+            //     0
+            // ); // mphminnnn
         }
 
         // Burn `virtualTokenAmount` deposit virtual tokens
@@ -1310,14 +1307,14 @@ contract DInterest is
                     (rawInterestAmount *
                         (maturationTimestamp - lastInterestPayoutTimestamp)) /
                         (block.timestamp - lastInterestPayoutTimestamp);
-                mphMinter.distributeFundingRewards(
-                    fundingID,
-                    effectiveInterestAmount
-                );
+                // mphMinter.distributeFundingRewards(
+                //     fundingID,
+                //     effectiveInterestAmount
+                // ); // mphminnnn
             }
         } else {
             // before maturation, mint full amount
-            mphMinter.distributeFundingRewards(fundingID, rawInterestAmount);
+            // mphMinter.distributeFundingRewards(fundingID, rawInterestAmount); // mphminnnn
         }
         // update last payout timestamp
         require(block.timestamp <= type(uint64).max, "OVERFLOW");
@@ -1534,11 +1531,11 @@ contract DInterest is
         emit ESetParamAddress(msg.sender, "moneyMarket.rewards", newValue);
     }
 
-    function setMPHMinter(address newValue) external onlyOwner {
-        require(newValue.isContract(), "NOT_CONTRACT");
-        mphMinter = MPHMinter(newValue);
-        emit ESetParamAddress(msg.sender, "mphMinter", newValue);
-    }
+    // function setMPHMinter(address newValue) external onlyOwner {
+    //     require(newValue.isContract(), "NOT_CONTRACT");
+    //     mphMinter = MPHMinter(newValue);
+    //     emit ESetParamAddress(msg.sender, "mphMinter", newValue);
+    // }
 
     function setMaxDepositPeriod(uint64 newValue) external onlyOwner {
         require(newValue > 0, "BAD_VAL");

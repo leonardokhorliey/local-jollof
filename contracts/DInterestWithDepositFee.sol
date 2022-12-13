@@ -21,7 +21,7 @@ contract DInterestWithDepositFee is DInterest {
         @param _interestOracle Address of the InterestOracle contract that provides the average interest rate
         @param _depositNFT Address of the NFT representing ownership of deposits (owner must be set to this DInterest contract)
         @param _fundingMultitoken Address of the ERC1155 multitoken representing ownership of fundings (this DInterest contract must have the minter-burner role)
-        @param _mphMinter Address of the contract for handling minting MPH to users
+        
      */
     function initialize(
         uint64 _MaxDepositPeriod,
@@ -31,8 +31,7 @@ contract DInterestWithDepositFee is DInterest {
         address _interestModel,
         address _interestOracle,
         address _depositNFT,
-        address _fundingMultitoken,
-        address _mphMinter
+        address _fundingMultitoken
     ) external virtual initializer {
         __DInterest_init(
             _MaxDepositPeriod,
@@ -41,8 +40,7 @@ contract DInterestWithDepositFee is DInterest {
             _interestModel,
             _interestOracle,
             _depositNFT,
-            _fundingMultitoken,
-            _mphMinter
+            _fundingMultitoken
         );
         DepositFee = _DepositFee;
     }

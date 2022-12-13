@@ -14,3 +14,5 @@ echidna-corpus
 .DS_Store
 docs
 typechain
+.env
+secret.json

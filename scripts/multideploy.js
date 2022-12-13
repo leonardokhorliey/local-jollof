@@ -60,6 +60,8 @@ async function main() {
       default:
         throw new Error(`unknown protocol: ${protocol}`);
     }
+
+    console.log(templatePoolName);
     const fromFileNames = [
       `88mph DAI via Aave Deposit_Implementation.json`,
       `88mph DAI via Aave Yield Token_Implementation.json`,
@@ -78,21 +80,27 @@ async function main() {
         fs.copyFileSync(fromPath, deploymentsRoot + toFileName);
       } catch {}
     }
+    console.log("templatePoolName");
 
     // deploy
-    await hre.run("deploy", {
-      tags: "DInterest"
-    });
+    const Lock = await hre.ethers.getContractFactory("DInterest");
+    const lock = await Lock.deploy();
+
+    await lock.deployed();
+
+    console.log(lock.address);
+
+    console.log("bogus");
 
     // remove config from list in json file
-    if (i == configList.length - 1) {
-      fs.writeFileSync("scripts/multideploy-configs.json", "[]");
-    } else {
-      fs.writeFileSync(
-        "scripts/multideploy-configs.json",
-        JSON.stringify(configList.slice(i + 1))
-      );
-    }
+    // if (i == configList.length - 1) {
+    //   fs.writeFileSync("scripts/multideploy-configs.json", "[]");
+    // } else {
+    //   fs.writeFileSync(
+    //     "scripts/multideploy-configs.json",
+    //     JSON.stringify(configList.slice(i + 1))
+    //   );
+    // }
 
     i++;
   }

@@ -320,8 +320,7 @@ contract Factory {
             _interestModel,
             _interestOracle,
             _depositNFT,
-            _fundingMultitoken,
-            _mphMinter
+            _fundingMultitoken
         );
         clone.transferOwnership(msg.sender, true, false);
 
@@ -358,8 +357,7 @@ contract Factory {
             params._interestModel,
             params._interestOracle,
             params._depositNFT,
-            params._fundingMultitoken,
-            params._mphMinter
+            params._fundingMultitoken
         );
         clone.transferOwnership(msg.sender, true, false);
 
